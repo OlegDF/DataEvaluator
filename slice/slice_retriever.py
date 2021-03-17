@@ -48,21 +48,29 @@ def get_slice(category, label):
     x = []
     y = []
     print("  " + label)
-    query = "select * from data where " + category + "=\'" + label + "\' order by " + col_first_date + ";"
+    query = "select * from data where " + category + "=\'" + label + "\';"
     slice_frame = sqlio.read_sql_query(query, conn)
     for index, row in slice_frame.iterrows():
         x.append(row[col_first_date])
         y.append(row[col_value_1])
+        x.append(row[col_last_date])
+        y.append(row[col_value_2])
+    if len(x) > 0:
+        x, y = zip(*sorted(zip(x, y)))
     return x, y
 
 def get_double_slice(category, label, category_2, label_2):
     x = []
     y = []
-    query = "select * from data where " + category + "=\'" + label + "\' and " + category_2 + "=\'" + label_2 + "\' order by " + col_first_date + ";"
+    query = "select * from data where " + category + "=\'" + label + "\' and " + category_2 + "=\'" + label_2 + "\';"
     slice_frame = sqlio.read_sql_query(query, conn)
     for index, row in slice_frame.iterrows():
         x.append(row[col_first_date])
         y.append(row[col_value_1])
+        x.append(row[col_last_date])
+        y.append(row[col_value_2])
+    if len(x) > 0:
+        x, y = zip(*sorted(zip(x, y)))
     return x, y
 
 def render_graph(category, label, x, y):
